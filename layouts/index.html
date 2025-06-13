@@ -1,19 +1,17 @@
 {{ define "main" }}
+
     {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
     {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
     {{ $filtered := ($pages | intersect $notHidden) }}
     {{ $pag := .Paginate ($filtered) }}
+{{ $page := first 1 (where .Site.RegularPages "Title" "home") }}    {{ with index $page 0 }}
+        {{/* Render with the page template or a suitable partial */}}
+        <article class="main-article ">
+        {{ partial "article-home/article-home.html" . }}
 
-    <section class="article-list">
-        {{ range $index, $element := $pag.Pages }}
-            {{ partial "article-list/default" . }}
-        {{ end }}
-    </section>
-
-    {{- partial "pagination.html" . -}}
+        </article>
+    {{ else }}
+        <p>No page found.</p>
+    {{ end }}
     {{- partial "footer/footer" . -}}
-{{ end }}
-
-{{ define "right-sidebar" }}
-    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
 {{ end }}
